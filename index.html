@@ -107,7 +107,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .card{position:relative;margin-bottom:2.4vh}
 #me{display:flex;gap:1vw;align-items:center}
 #me .av{width:clamp(38px,2.9vw,56px);height:clamp(38px,2.9vw,56px);border:1px solid rgba(208,20,20,.7);display:grid;place-items:center;color:var(--dim);font-family:var(--cond);font-size:1.3vw;background:rgba(0,0,0,.35)}
-#me .nm{font-weight:700;font-size:clamp(15px,1.15vw,22px);margin-top:.3vh}
+#me .av img{width:100%;height:100%;object-fit:cover;display:block}
+#me .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:18vw;font-weight:700;font-size:clamp(15px,1.15vw,22px);margin-top:.3vh}
 #me .sub{font-size:clamp(10px,.72vw,13px);color:var(--dim);margin-top:.2vh}
 #sid{font-family:ui-monospace,Consolas,monospace;font-size:clamp(8px,.55vw,11px);color:#4a4442;margin:-1.4vh 0 2.4vh 0;letter-spacing:.08em}
 
@@ -175,8 +176,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 
   <div id="cards">
     <div class="card" id="me">
-      <div class="av">?</div>
-      <div><div class="lab">Welcome to Z Evil</div><div class="nm">Fresh meat</div><div class="sub">Don't trust anyone. Especially the nice ones.</div></div>
+      <div class="av" id="meAv">?</div>
+      <div><div class="lab">Welcome to Z Evil</div><div class="nm" id="meName">Survivor</div><div class="sub">Don't trust anyone. Especially the nice ones.</div></div>
     </div>
     <div id="sid"></div>
     <div class="card panel" id="cls">
@@ -203,7 +204,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 var CONFIG = {
   links: [
     // label, text shown, main=true makes it big
-    { label: "Discord",  text: "discord.gg/fAz4XX3KKa", main: true }
+    { label: "Discord",  text: "discord.gg/YhT5rZFNp5", main: true }
     // add more lines like: , { label: "Steam group", text: "steamcommunity.com/groups/..." }
   ],
   // Background pictures or videos (gameplay screenshots / short .webm clips work best).
@@ -220,7 +221,10 @@ var CONFIG = {
     "a friendly face that isn't. it learned your name on the way in.",
     "what's left when the lights go out and the round begins."
   ],
-  gamemodeName: "Z City · Homicide"
+  gamemodeName: "Z City · Homicide",
+  // Link to the little Steam profile helper (see README). Fills in the joining
+  // player's Steam name + profile picture. Leave "" to show "Survivor" instead.
+  profileApi: ""
 };
 
 var CLASSES = [
@@ -497,12 +501,29 @@ function statusStep(s){
   return 0;
 }
 
+/* ---- the joining player's Steam name + picture (via CONFIG.profileApi) ---- */
+function LoadProfile(id){
+  if(!CONFIG.profileApi || !/^7656\d{13}$/.test(id)) return;
+  var x = new XMLHttpRequest();
+  x.open("GET", CONFIG.profileApi + (CONFIG.profileApi.indexOf("?")<0?"?":"&") + "steamid=" + id, true);
+  x.timeout = 8000;
+  x.onload = function(){
+    try{
+      var p = JSON.parse(x.responseText); if(!p || !p.name) return;
+      $("meName").textContent = p.name;
+      $("kickerText").textContent = String(p.name).toUpperCase();
+      if(p.avatar){ var im = new Image(); im.onload=function(){ var av=$("meAv"); av.innerHTML=""; av.appendChild(im); }; im.src = p.avatar; }
+    }catch(e){}
+  };
+  x.send();
+}
+
 /* ---- the functions Garry's Mod calls ---- */
 function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language){
   S.gotDetails = true;
   if(mapname) $("map").textContent = mapname;
   if(servername) $("srv").textContent = servername.replace(/\^\d/g,"");
-  if(steamid && steamid !== "0"){ $("sid").textContent = steamid; }
+  if(steamid && steamid !== "0"){ $("sid").textContent = steamid; LoadProfile(steamid); }
   if(CONFIG.music){
     var a = new Audio(CONFIG.music); a.loop = true;
     a.volume = Math.max(0,Math.min(1,(parseFloat(volume)||1) * CONFIG.musicVolume));
