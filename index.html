@@ -25,28 +25,28 @@
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;cursor:default;user-select:none}
 
 /* ---------- background ---------- */
-#media{position:fixed;inset:0;z-index:0}
-#media .slide{position:absolute;inset:-4%;opacity:0;transition:opacity 2.4s ease;background-size:cover;background-position:center;filter:saturate(.75) contrast(1.05) brightness(.62)}
+#media{position:fixed;top:0;right:0;bottom:0;left:0;z-index:0}
+#media .slide{position:absolute;top:-4%;right:-4%;bottom:-4%;left:-4%;opacity:0;transition:opacity 2.4s ease;background-size:cover;background-position:center;filter:saturate(.75) contrast(1.05) brightness(.62)}
 #media .slide.on{opacity:1}
 #media video.slide{width:108%;height:108%;object-fit:cover}
 @keyframes drift{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.12) translate(-2%,-1.5%)}}
 #media .slide.on{animation:drift 22s linear forwards}
-#fog{position:fixed;inset:0;z-index:1;width:100%;height:100%}
-#shade{position:fixed;inset:0;z-index:2;pointer-events:none;
+#fog{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1;width:100%;height:100%}
+#shade{position:fixed;top:0;right:0;bottom:0;left:0;z-index:2;pointer-events:none;
   background:
     linear-gradient(90deg,rgba(5,3,3,.92) 0%,rgba(5,3,3,.55) 30%,rgba(5,3,3,.08) 55%,rgba(5,3,3,.45) 78%,rgba(5,3,3,.85) 100%),
     linear-gradient(0deg,rgba(5,3,3,.95) 0%,rgba(5,3,3,0) 28%,rgba(5,3,3,0) 80%,rgba(5,3,3,.7) 100%),
     radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 45%,rgba(40,0,0,.55) 100%)}
-#grain{position:fixed;inset:-50%;z-index:3;pointer-events:none;opacity:.09;mix-blend-mode:screen;
+#grain{position:fixed;top:-50%;right:-50%;bottom:-50%;left:-50%;z-index:3;pointer-events:none;opacity:.09;mix-blend-mode:screen;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation:grain .9s steps(6) infinite}
 @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
-#scan{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.18;
+#scan{position:fixed;top:0;right:0;bottom:0;left:0;z-index:3;pointer-events:none;opacity:.18;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.6) 0 1px,transparent 1px 3px)}
-#flick{position:fixed;inset:0;z-index:4;pointer-events:none;background:#000;opacity:0}
+#flick{position:fixed;top:0;right:0;bottom:0;left:0;z-index:4;pointer-events:none;background:#000;opacity:0}
 
 /* ---------- layout ---------- */
-#ui{position:fixed;inset:0;z-index:10;padding:5.2vh 4.2vw 4.6vh;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto}
+#ui{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;z-index:10;padding:5.2vh 4.2vw 4.6vh;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto}
 .lab{font-family:var(--cond);font-weight:500;font-size:clamp(9px,.68vw,13px);letter-spacing:.32em;text-transform:uppercase;color:var(--mute)}
 
 /* brand */
@@ -55,7 +55,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 #logo{display:block;width:clamp(250px,18vw,400px);height:auto;margin-left:-.4vw}
 #brand{grid-column:1;grid-row:1}
 #sigil{width:clamp(22px,1.9vw,34px);height:clamp(22px,1.9vw,34px);border:1.5px solid var(--ink);position:relative;margin-bottom:2.6vh;opacity:.9}
-#sigil::before{content:"";position:absolute;inset:22%;border:1.5px solid var(--ink);border-radius:50%}
+#sigil::before{content:"";position:absolute;top:22%;right:22%;bottom:22%;left:22%;border:1.5px solid var(--ink);border-radius:50%}
 #sigil::after{content:"";position:absolute;left:-30%;right:-30%;top:50%;height:2px;background:var(--red);transform:rotate(-8deg)}
 #word{font-family:var(--cond);font-weight:300;font-size:clamp(40px,4.9vw,94px);letter-spacing:.34em;line-height:.9;color:var(--ink);white-space:nowrap;position:relative;display:inline-block;text-shadow:0 0 30px rgba(0,0,0,.6)}
 #word .bar{display:inline-block;width:.085em;height:.74em;background:var(--red2);margin:0 .42em 0 .06em;vertical-align:-.02em;position:relative;box-shadow:0 0 14px rgba(255,30,30,.55)}
