@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div id="kicker" class="rv"><span id="kickerText">SURVIVOR</span><i></i></div>
     <canvas id="logo" class="rv" style="animation-delay:.1s"></canvas>
     <div id="tag" class="rv" style="animation-delay:.25s"><div class="dash"></div><span id="tagline">TRUST NO ONE</span></div>
-    <div id="def" class="rv" style="animation-delay:.4s"><b>evil</b><em>/ˈē·vəl/ noun</em><br><span id="deftext"></span></div>
+    <div id="def" class="rv" style="animation-delay:.4s"><b>evil</b><em>/ˈiː·v(ə)l/ noun</em><br><span id="deftext"></span></div>
   </div>
 
   <div id="info" class="rv" style="animation-delay:.55s">
@@ -210,16 +210,14 @@ var CONFIG = {
   // Background pictures or videos (gameplay screenshots / short .webm clips work best).
   // Put them next to index.html (e.g. "bg/1.jpg") or use full https:// links.
   // Leave empty for the animated red fog on its own.
-  backgrounds: [],
+  backgrounds: ["bg/1.webm", "bg/2.webm", "bg/3.webm", "bg/4.webm", "bg/5.webm", "bg/6.webm"],
   slideSeconds: 9,
   // Optional music (.mp3/.ogg). Uses the player's in-game volume setting.
   music: "",
   musicVolume: 0.35,
   tagline: "TRUST NO ONE",
   definitions: [
-    "the one standing next to you, smiling, who already knows how you die.",
-    "a friendly face that isn't. it learned your name on the way in.",
-    "what's left when the lights go out and the round begins."
+    "profound immorality and wickedness, especially when regarded as a supernatural force."
   ],
   gamemodeName: "Z City · Homicide",
   // Link to the little Steam profile helper (see README). Fills in the joining
@@ -340,18 +338,20 @@ setInterval(showClass, 8000); setTimeout(function(){ setInterval(showTip, 9000);
   var host=$("media"), els=[];
   list.forEach(function(src){
     var el;
-    if(/\.(webm|mp4)(\?|$)/i.test(src)){ el=document.createElement("video"); el.src=src; el.muted=true; el.loop=true; el.playsInline=true; el.autoplay=true; }
+    if(/\.(webm|mp4)(\?|$)/i.test(src)){ el=document.createElement("video"); el.src=src; el.muted=true; el.loop=false; el.playsInline=true; el.preload="auto"; el.addEventListener("ended", function(){ if(els[i]===this) next(); }); el.addEventListener("error", function(){ if(els[i]===this) next(); }); }
     else { el=document.createElement("div"); el.style.backgroundImage='url("'+src+'")'; }
     el.className="slide"; host.appendChild(el); els.push(el);
   });
-  var i=-1;
+  var i=-1, timer=null;
   function next(){
+    clearTimeout(timer);
     if(i>=0) els[i].classList.remove("on");
     i=(i+1)%els.length; var e=els[i];
     e.classList.remove("on"); void e.offsetWidth; e.classList.add("on");
-    if(e.play) try{ e.currentTime=0; e.play(); }catch(x){}
+    if(e.play){ try{ e.currentTime=0; var pr=e.play(); if(pr&&pr.catch) pr.catch(function(){}); }catch(x){} timer=setTimeout(next, 20000); }
+    else timer=setTimeout(next, CONFIG.slideSeconds*1000);
   }
-  next(); if(els.length>1) setInterval(next, CONFIG.slideSeconds*1000);
+  next();
 })();
 
 /* ---------------- the Z-EVIL logo: torn, cracked, bloody, glitching ---------------- */
